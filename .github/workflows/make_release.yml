@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version of the new release, e.g. "v0.1.0"'
+        description: Version of the new release
         required: true
         type: string
+        default: 0.1.0
 
 jobs:
   make-release:
@@ -32,7 +33,7 @@ jobs:
     - name: Update CHANGELOG.md version
       run: |
         release_date=$(date --utc +%Y-%m-%d)
-        version=${{ inputs.version }}
+        version='v${{ inputs.version }}'
         sed -zi \
           "s/# Changelog\n\n## Unreleased - XXXX-XX-XX/# Changelog\n\n## Unreleased - XXXX-XX-XX\n\n## $version - $release_date/" \
           CHANGELOG.md
@@ -50,13 +51,13 @@ jobs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v8
       with:
-        branch: release-${{ inputs.version }}
+        branch: release-v${{ inputs.version }}
         commit-message: |
-          Release ${{ inputs.version }}
+          Release v${{ inputs.version }}
 
           Update version in CHANGELOG.md
           Update version in Cargo.toml
           Update Cargo.lock
-        title: Release ${{ inputs.version }}
+        title: Release v${{ inputs.version }}
         body: |
-          Make release for ${{ inputs.version }} by workflow
+          Make release for v${{ inputs.version }} by workflow
