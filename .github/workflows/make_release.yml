@@ -27,7 +27,7 @@ jobs:
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git branch -c 'release-v${{ inputs.version }}'
+        git switch -c 'release-v${{ inputs.version }}'
 
     # Notes with sed:
     # We uses -z in order to treat the entire file as a single input needed to match newlines.
