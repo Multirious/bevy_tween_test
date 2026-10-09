@@ -1,5 +1,5 @@
 [package]
-name = "bevy_tween"
+name = "bevy_tween_test"
 description = "Flexible tweening plugin library for Bevy"
 version = "0.13.0"
 edition = "2024"
