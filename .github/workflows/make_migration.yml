@@ -1,15 +1,10 @@
-name: Make Release PR
+name: Make Bevy Migration PR
 
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: Version of the new release
-        required: true
-        type: string
-        default: 0.1.0
-      bevy_version:
-        description: Bevy version this release uses
+        description: The new Bevy version
         required: true
         type: string
         default: 0.1.0
@@ -36,20 +31,6 @@ jobs:
           "s/# Changelog\n\n## Unreleased - XXXX-XX-XX\n/&\n## $version - $release_date\n/; t; q1" \
           CHANGELOG.md
 
-    - name: Update README.md bevy version support table
-      run: |
-        row=$(printf "| %-6s | %-12s |" '${{ inputs.bevy_version }}' '${{ inputs.version }}' )
-        sed -zi \
-          "s/## Bevy Version Support\n\n| \`bevy\` | \`bevy_tween\` |\n|--------|--------------|\n/&$row\n/; t; q1" \
-          README.md
-
-    - name: Update Cargo.toml version
-      run: |
-        # Only change the first match, which should be ours.
-        sed -i \
-          '0,/version = ".*"/s//version = "${{ inputs.version }}"/; t; q1' \
-          Cargo.toml
-
     - name: Update Cargo
       run: |
         cargo update
@@ -62,3 +43,4 @@ jobs:
         commit-message: Release v${{ inputs.version }}
         title: Release v${{ inputs.version }}
         body: Make release for v${{ inputs.version }} by workflow
+
