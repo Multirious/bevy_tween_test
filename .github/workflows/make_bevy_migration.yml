@@ -56,7 +56,6 @@ jobs:
 
     - name: Create Pull Request
       env:
-        UPDATE_CRATES: ${{ vers.BEVY_MANUAL_UPDATE }}
         GH_TOKEN: ${{ secrets.TOKEN }}
         BODY: |
           # Objective
