@@ -34,11 +34,15 @@ jobs:
       env:
         QUERIES: ${{ vars.BEVY_QUERY_AUTO_UPDATE }}
       run: |
+        QUERIES="dependencies.bevy.version
+        dependencies.bevy_math.version
+        dev-dependencies.bevy.version"
+
         for query in $QUERIES; do
           echo "hi"
           echo "$query"
           # Buffer the output first before redirecting otherwise the content will be very wrong
-          echo "$(./toml set Cargo.toml "$(printf "%s" $query)" '${{ inputs.bevy_version }}')" > Cargo.toml
+          echo "$(./toml set Cargo.toml "$query" '${{ inputs.bevy_version }}')" > Cargo.toml
         done
         git add Cargo.toml
         git commit -m "Update Bevy dependencies"
