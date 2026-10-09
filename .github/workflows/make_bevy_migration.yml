@@ -35,6 +35,7 @@ jobs:
         QUERIES: ${{ vars.BEVY_QUERY_AUTO_UPDATE }}
       run: |
         for query in $QUERIES; do
+          echo $query
           # Buffer the output first before redirecting otherwise the content will be very wrong
           echo "$(./toml set Cargo.toml $query '${{ inputs.bevy_version }}')" > Cargo.toml
         done
