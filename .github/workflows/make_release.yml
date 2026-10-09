@@ -40,20 +40,22 @@ jobs:
         release_date=$(date --utc +%Y-%m-%d)
         version='v${{ inputs.version }}'
         sed -zi \
-          "s/# Changelog\n\n## Unreleased - XXXX-XX-XX\n/&\n## $version - $release_date\n/" \
+          "s/# Changelog\n\n## Unreleased - XXXX-XX-XX\n/&\n## $version - $release_date\n/; t; q1" \
           CHANGELOG.md
 
     - name: Update README.md bevy version support table
       run: |
         row=$(printf "| %-6s | %-12s |" '${{ inputs.bevy_version }}' '${{ inputs.version }}' )
         sed -zi \
-          "s/## Bevy Version Support\n\n| \`bevy\` | \`bevy_tween\` |\n|--------|--------------|\n/&$row\n/" \
+          "s/## Bevy Version Support\n\n| \`bevy\` | \`bevy_tween\` |\n|--------|--------------|\n/&$row\n/; t; q1" \
           README.md
 
     - name: Update Cargo.toml version
       run: |
         # Change the first match, which should be ours.
-        sed -i '0,/version = ".*"/s//version = "${{ inputs.version }}"/' Cargo.toml
+        sed -i \
+          '0,/version = ".*"/s//version = "${{ inputs.version }}"/; t; q1' \
+          Cargo.toml
 
     - name: Update Cargo
       run: |
