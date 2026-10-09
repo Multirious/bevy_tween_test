@@ -45,7 +45,7 @@ jobs:
 
     - name: Make Checklist
       env:
-        CRATES: ${{ vers.BEVY_MANUAL_UPDATE }}
+        CRATES: ${{ vars.BEVY_MANUAL_UPDATE }}
       run: |
         checklist=
         for crate in $CRATES; do
