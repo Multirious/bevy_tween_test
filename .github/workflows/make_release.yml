@@ -29,6 +29,11 @@ jobs:
 
     - uses: dtolnay/rust-toolchain@stable
 
+    - name: Setup git
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+
     - name: Create release branch
       run: git branch release-${{ inputs.version }}
 
