@@ -34,9 +34,7 @@ jobs:
       env:
         QUERIES: ${{ vars.BEVY_QUERY_AUTO_UPDATE }}
       run: |
-        QUERIES="dependencies.bevy.version
-        dependencies.bevy_math.version
-        dev-dependencies.bevy.version"
+        QUERIES="$(echo "$QUERIES" | xargs)"
 
         for query in $QUERIES; do
           echo "hi"
