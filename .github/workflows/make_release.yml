@@ -47,7 +47,6 @@ jobs:
     - name: Update Cargo
       run: |
         cargo update
-        cargo check
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v8
