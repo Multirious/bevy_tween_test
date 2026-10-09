@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased - XXXX-XX-XX
+- Migrate to Bevy v0.20.0 by [#9](https://github.com/Multirious/bevy_tween_test/pull/9)
 
 - Make AnimationTarget derives Clone and Copy by [#90](https://github.com/Multirious/bevy_tween/pull/90)
 
