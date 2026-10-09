@@ -67,7 +67,7 @@ jobs:
         content="- Migrate to Bevy v${{ inputs.bevy_version }} by [#$pr_num]($PR_URL)"
         escaped_content=$(printf '%s\n' "$content" | sed -e 's/[\/&]/\\&/g')
         sed -zi \
-          "s/# Changelog\n\n## Unreleased - XXXX-XX-XX\n/&$escaped_content\n/; t; q1" \
+          "s/# Changelog\n\n## Unreleased - XXXX-XX-XX\n/&\n$escaped_content/; t; q1" \
           CHANGELOG.md
 
         git add CHANGELOG.md
