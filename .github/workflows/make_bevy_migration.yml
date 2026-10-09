@@ -61,8 +61,8 @@ jobs:
 
     - name: Add PR to CHANGELOG.md
       run: |
-        pr_num=${PR_URL##*/}
-        content="- Migrate to Bevy v${{ inputs.bevy_version }} by [#$pr_num]($PR_URL)"
+        pr_num="${PR_URL##*/}"
+        content="- Migrate to Bevy v${{ inputs.bevy_version }} by \[#$pr_num\]\($PR_URL\)"
         sed -zi \
           "s/# Changelog\n\n## Unreleased - XXXX-XX-XX\n/&$content\n/; t; q1" \
           CHANGELOG.md
