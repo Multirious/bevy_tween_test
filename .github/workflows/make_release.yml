@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
-    - uses: actions/cache@v4
+    - uses: actions/cache@v6
       with:
         path: |
           ~/.cargo/bin/
@@ -52,12 +52,6 @@ jobs:
       with:
         token: ${{ secrets.RELEASE_TOKEN }}
         branch: release-v${{ inputs.version }}
-        commit-message: |
-          Release v${{ inputs.version }}
-
-          Update version in CHANGELOG.md
-          Update version in Cargo.toml
-          Update Cargo.lock
+        commit-message: Release v${{ inputs.version }}
         title: Release v${{ inputs.version }}
-        body: |
-          Make release for v${{ inputs.version }} by workflow
+        body: Make release for v${{ inputs.version }} by workflow
