@@ -61,21 +61,16 @@ jobs:
         sed -zi \
           's/version = "[^"]*"/version = "${{ inputs.version }}"/; t; q1' \
           Cargo.toml
-        gid add Cargo.toml
+        git add Cargo.toml
         git commit -m 'Update Cargo.toml version'
 
     - name: Update Cargo
       run: |
         cargo update
+        git add Cargo.lock
+        git commit -m 'Update Cargo.lock' || true
 
     - name: Create Pull Request
-      # uses: peter-evans/create-pull-request@v8
-      # with:
-      #   token: ${{ secrets.RELEASE_TOKEN }}
-      #   branch: release-v${{ inputs.version }}
-      #   commit-message: Release v${{ inputs.version }}
-      #   title: Release v${{ inputs.version }}
-      #   body: Make release for v${{ inputs.version }} by workflow
       env:
         GH_TOKEN: ${{ secrets.TOKEN }}
       run: |
