@@ -22,7 +22,7 @@ jobs:
         GH_TOKEN: ${{ secrets.TOKEN }}
       run: |
         current_changelog="$(awk "/## ${RELEASE_VERSION}/{flag=1; next} /## /{flag=0} flag")"
-        gh release create $RELEASE_VERSION --notes $current_changelog
+        gh release create $RELEASE_VERSION --notes "$current_changelog"
 
     - name: Publish to crates.io
       env:
