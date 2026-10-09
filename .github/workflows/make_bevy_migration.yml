@@ -40,7 +40,7 @@ jobs:
       run: |
         for query in $QUERIES; do
           # Buffer the output first before redirecting otherwise the content will be very wrong
-          echo "$(toml set Cargo.toml $query '${{ inputs.bevy_version }}')" > Cargo.toml
+          echo "$(toml set Cargo.toml "$query" '${{ inputs.bevy_version }}')" > Cargo.toml
         done
         git add Cargo.toml
         git commit -m "Update Bevy dependencies"
