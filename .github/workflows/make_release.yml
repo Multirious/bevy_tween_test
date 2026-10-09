@@ -49,13 +49,14 @@ jobs:
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v8
-      branch: release-${{ inputs.version }}
-      commit-message: |
-        Release ${{ inputs.version }}
+      with:
+        branch: release-${{ inputs.version }}
+        commit-message: |
+          Release ${{ inputs.version }}
 
-        Update version in CHANGELOG.md
-        Update version in Cargo.toml
-        Update Cargo.lock
-      title: Release ${{ inputs.version }}
-      body: |
-        Make release for ${{ inputs.version }} by workflow
+          Update version in CHANGELOG.md
+          Update version in Cargo.toml
+          Update Cargo.lock
+        title: Release ${{ inputs.version }}
+        body: |
+          Make release for ${{ inputs.version }} by workflow
