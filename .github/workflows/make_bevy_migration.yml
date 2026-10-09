@@ -50,7 +50,8 @@ jobs:
         checklist=
         for crate in $CRATES; do
           crate="$(echo "$crate" | sed 's/\r$//')"
-          checklist=$'$checklist\n- [ ] Update \`$crate\`'
+          checklist="$checklist
+        - [ ] Update \`$crate\`"
         done
         echo "CHECKLIST=$checklist" >> $GITHUB_ENV
 
