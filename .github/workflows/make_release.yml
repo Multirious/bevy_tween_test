@@ -64,12 +64,6 @@ jobs:
         git add Cargo.toml
         git commit -m 'Update Cargo.toml version'
 
-    - name: Update Cargo
-      run: |
-        cargo update
-        git add Cargo.lock
-        git commit -m 'Update Cargo.lock' || true
-
     - name: Create Pull Request
       env:
         GH_TOKEN: ${{ secrets.TOKEN }}
