@@ -1,0 +1,64 @@
+name: Make Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of the new release, e.g. "v0.1.0"'
+        required: true
+        type: string
+
+jobs:
+  make-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          ~/.cargo/.crates.toml
+          ~/.cargo/.crates2.json
+          target/
+        key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.toml') }}
+
+    - uses: dtolnay/rust-toolchain@stable
+
+    - name: Create release branch
+      run: git branch release-${{ inputs.version }}
+
+    - name: Update CHANGELOG.md version
+      run: |
+        release_date=$(date --utc +%Y-%m-%d)
+        version=${{ inputs.version }}
+        sed -zi \
+          "s/# Changelog\n\n## Unreleased - XXXX-XX-XX/# Changelog\n\n## Unreleased - XXXX-XX-XX\n\n## $version - $release_date/" \
+          CHANGELOG.md
+
+        git commit -m "Update latest CHANGELOG.md version to ${{ inputs.version }}"
+
+    - name: Update Cargo.toml version
+      run: |
+        # Should change the top-most version key, which should be ours.
+        sed -i 's/version = ".*"/version = "${{ inputs.version }}"/' Cargo.toml
+
+        git commit -m "Update Cargo.toml version to ${{ inputs.version }}"
+
+    - name: Make PR
+      run: |
+        gh pr create \
+          -B main \
+          -H release-${{ inputs.version }} \
+          --title 'Release ${{ inputs.version }}' \
+          --body "\
+            # Objective \
+            \
+            - Make release for ${{ inputs.version }} \
+            \
+            Created by GitHub action \
+          "
