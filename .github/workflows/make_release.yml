@@ -45,6 +45,7 @@ jobs:
           "s/# Changelog\n\n## Unreleased - XXXX-XX-XX/# Changelog\n\n## Unreleased - XXXX-XX-XX\n\n## $version - $release_date/" \
           CHANGELOG.md
 
+        git add CHANGELOG.md
         git commit -m "Update latest CHANGELOG.md version to ${{ inputs.version }}"
 
     - name: Update Cargo.toml version
@@ -52,7 +53,12 @@ jobs:
         # Should change the top-most version key, which should be ours.
         sed -i 's/version = ".*"/version = "${{ inputs.version }}"/' Cargo.toml
 
+        git add Cargo.toml
         git commit -m "Update Cargo.toml version to ${{ inputs.version }}"
+
+    - name: Push branch
+      run: |
+        git push -u origin release-${{ inputs.version }}
 
     - name: Make PR
       run: |
