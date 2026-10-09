@@ -18,8 +18,6 @@ jobs:
       with:
         token: ${{ secrets.TOKEN }}
 
-    - uses: dtolnay/rust-toolchain@stable
-
     - name: Setup Git
       run: |
         git config --global user.name 'github-actions[bot]'
@@ -27,7 +25,10 @@ jobs:
         git switch -c 'bevy-v${{ inputs.bevy_version }}'
 
     - name: Install toml-cli
-      run: cargo install toml-cli
+      run: |
+        curl -OL https://github.com/gnprice/toml-cli/releases/download/v0.2.3/toml-0.2.3-x86_64-linux.tar.gz
+        tar -xf toml-0.2.3-x86_64-linux.tar.gz
+        mv toml-0.2.3-x86_64-linux.tar.gz/toml .
 
     - name: Update Bevy dependencies
       env:
@@ -35,9 +36,10 @@ jobs:
       run: |
         for query in $QUERIES; do
           # Buffer the output first before redirecting otherwise the content will be very wrong
-          echo "$(toml set Cargo.toml $query '${{ inputs.bevy_version }}')" > Cargo.toml
+          echo "$(./toml set Cargo.toml $query '${{ inputs.bevy_version }}')" > Cargo.toml
         done
         git add Cargo.toml
+        git commit -m "Update Bevy dependencies"
 
     - name: Create Pull Request
       env:
