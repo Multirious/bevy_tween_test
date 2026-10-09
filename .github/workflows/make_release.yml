@@ -21,19 +21,11 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
-    - uses: actions/cache@v6
-      with:
-        path: |
-          ~/.cargo/bin/
-          ~/.cargo/registry/index/
-          ~/.cargo/registry/cache/
-          ~/.cargo/git/db/
-          ~/.cargo/.crates.toml
-          ~/.cargo/.crates2.json
-          target/
-        key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.toml') }}
-
     - uses: dtolnay/rust-toolchain@stable
+
+    # Notes with sed:
+    # We uses -z in order to treat the entire file as a single input needed to match newlines
+    # & Means to use the matched regex within the substituion.
 
     - name: Update CHANGELOG.md version
       run: |
