@@ -44,7 +44,7 @@ jobs:
 
     - name: Update Cargo.toml version
       run: |
-        # Change the first match, which should be ours.
+        # Only change the first match, which should be ours.
         sed -i \
           '0,/version = ".*"/s//version = "${{ inputs.version }}"/; t; q1' \
           Cargo.toml
