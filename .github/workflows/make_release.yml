@@ -8,6 +8,11 @@ on:
         required: true
         type: string
         default: 0.1.0
+      bevy_version:
+        description: Bevy version this release uses
+        required: true
+        type: string
+        default: 0.1.0
 
 jobs:
   make-release:
@@ -35,8 +40,15 @@ jobs:
         release_date=$(date --utc +%Y-%m-%d)
         version='v${{ inputs.version }}'
         sed -zi \
-          "s/# Changelog\n\n## Unreleased - XXXX-XX-XX/# Changelog\n\n## Unreleased - XXXX-XX-XX\n\n## $version - $release_date/" \
+          "s/# Changelog\n\n## Unreleased - XXXX-XX-XX\n/&\n## $version - $release_date\n/" \
           CHANGELOG.md
+
+    - name: Update README.md bevy version support table
+      run: |
+        row=$(printf "| %-6s | %-12s |" '${{ inputs.bevy_version }}' '${{ inputs.version }}' )
+        sed -zi \
+          "s/## Bevy Version Support\n\n| \`bevy\` | \`bevy_tween\` |\n|--------|--------------|\n/&$row\n/" \
+          README.md
 
     - name: Update Cargo.toml version
       run: |
