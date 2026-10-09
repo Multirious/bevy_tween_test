@@ -40,8 +40,8 @@ jobs:
 
     - name: Update Cargo.toml version
       run: |
-        # Should change the top-most version key, which should be ours.
-        sed -i 's/version = ".*"/version = "${{ inputs.version }}"/' Cargo.toml
+        # Change the first match, which should be ours.
+        sed -i '0,/version = ".*"/s//version = "${{ inputs.version }}"/' Cargo.toml
         cat Cargo.toml
 
     - name: Update Cargo
