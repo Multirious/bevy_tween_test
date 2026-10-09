@@ -53,6 +53,7 @@ jobs:
           checklist="$checklist
         - [ ] Update \`$crate\`"
         done
+        echo "this"
         echo "CHECKLIST=\"$checklist\"" >> $GITHUB_ENV
 
     - name: Create Pull Request
