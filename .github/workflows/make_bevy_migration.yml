@@ -35,7 +35,8 @@ jobs:
         QUERIES: ${{ vars.BEVY_QUERY_AUTO_UPDATE }}
       run: |
         for query in $QUERIES; do
-          query="$(echo "$query" | dos2unix)"
+          # The varible when configured in github have fucking carriage return in it.
+          query="$(echo "$query" | sed 's/\r$//')"
           # Buffer the output first before redirecting otherwise the content will be very wrong
           echo "$(./toml set Cargo.toml "$query" '${{ inputs.bevy_version }}')" > Cargo.toml
         done
