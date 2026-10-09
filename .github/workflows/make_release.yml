@@ -23,8 +23,6 @@ jobs:
       with:
         token: ${{ secrets.TOKEN }}
 
-    - uses: dtolnay/rust-toolchain@stable
-
     - name: Setup Git
       run: |
         git config --global user.name 'github-actions[bot]'
