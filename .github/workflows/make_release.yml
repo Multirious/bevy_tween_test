@@ -61,6 +61,7 @@ jobs:
         sed -zi \
           's/version = "[^"]*"/version = "${{ inputs.version }}"/; t; q1' \
           Cargo.toml
+        gid add Cargo.toml
         git commit -m 'Update Cargo.toml version'
 
     - name: Update Cargo
