@@ -13,6 +13,8 @@ jobs:
     steps:
     - uses: actions/checkout@v7
 
+    - uses: dtolnay/rust-toolchain@stable
+
     - name: Get release version
       run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
@@ -22,3 +24,9 @@ jobs:
       run: |
         current_changelog="$(awk "/## ${RELEASE_VERSION}/{flag=1; next} /## /{flag=0} flag")"
         gh release create $RELEASE_VERSION --notes $current_changelog
+
+    - name: Publish to crates.io
+      env:
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO_TOKEN }}
+      run: |
+        cargo publish --dry-run
