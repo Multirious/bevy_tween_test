@@ -42,6 +42,7 @@ jobs:
       run: |
         # Should change the top-most version key, which should be ours.
         sed -i 's/version = ".*"/version = "${{ inputs.version }}"/' Cargo.toml
+        cat Cargo.toml
 
     - name: Update Cargo
       run: |
