@@ -17,6 +17,12 @@ jobs:
     - name: Get release version
       run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
+    - name: Publish to crates.io
+      env:
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO_TOKEN }}
+      run: |
+        cargo publish --workspace
+
     - name: Create Release
       env:
         GH_TOKEN: ${{ secrets.TOKEN }}
@@ -28,9 +34,3 @@ jobs:
         gh release create $RELEASE_VERSION \
           --title "Release $RELEASE_VERSION"\
           --notes "$current_changelog" || true
-
-    - name: Publish to crates.io
-      env:
-        CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO_TOKEN }}
-      run: |
-        cargo publish --workspace
