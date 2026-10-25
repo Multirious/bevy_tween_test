@@ -8,6 +8,11 @@ on:
         required: true
         type: string
         default: 0.1.0
+      readme_version:
+        description: Version of the new release in readme.
+        required: true
+        type: string
+        default: 0.1
       bevy_version:
         description: |
           Bevy version this release uses. (No patch version needed)
@@ -24,6 +29,20 @@ jobs:
     - uses: actions/checkout@v7
       with:
         token: ${{ secrets.TOKEN }}
+
+    - uses: actions/cache@v6
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          ~/.cargo/.crates.toml
+          ~/.cargo/.crates2.json
+          target/
+        key: ${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.toml') }}
+
+    - uses: dtolnay/rust-toolchain@stable
 
     - name: Setup Git
       run: |
@@ -48,7 +67,7 @@ jobs:
 
     - name: Update README.md bevy version support table
       run: |
-        row=$(printf "| %-6s | %-12s |" '${{ inputs.bevy_version }}' '${{ inputs.version }}' )
+        row=$(printf "| %-6s | %-12s |" '${{ inputs.bevy_version }}' '${{ inputs.readme_version }}' )
         sed -zi \
           "s/## Bevy Version Support\n\n| \`bevy\` | \`bevy_tween\` |\n|--------|--------------|\n/&$row\n/; t; q1" \
           README.md
@@ -63,6 +82,10 @@ jobs:
           Cargo.toml
         git add Cargo.toml
         git commit -m 'Update Cargo.toml version'
+
+        cargo update
+        git add Cargo.lock
+        git commit -m 'Update Cargo.lock'
 
     - name: Create Pull Request
       env:
