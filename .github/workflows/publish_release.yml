@@ -27,16 +27,16 @@ jobs:
         version="$(echo "$message" | sed -zn "s/.*?publish_release \(v\S*\).*/\1/p; t; q1")"
         echo "RELEASE_VERSION=$version" >> $GITHUB_ENV
 
-    - name: Tag commit
-      run: |
-        git tag "$RELEASE_VERSION" -m "Release $RELEASE_VERSION"
-        git push origin tag "$RELEASE_VERSION"
-
     - name: Publish to crates.io
       env:
         CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO_TOKEN }}
       run: |
         cargo publish --workspace --dry-run
+
+    - name: Tag commit
+      run: |
+        git tag "$RELEASE_VERSION" -m "Release $RELEASE_VERSION"
+        git push origin tag "$RELEASE_VERSION"
 
     - name: Create Release
       env:
