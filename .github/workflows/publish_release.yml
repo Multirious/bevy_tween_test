@@ -2,35 +2,47 @@ name: Publish Release
 
 on:
   push:
-    tags:
-      - v*
 
 jobs:
   publish-release:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '?publish_release')"
 
     steps:
     - uses: actions/checkout@v7
+      with:
+        token: ${{ secrets.TOKEN }}
 
     - uses: dtolnay/rust-toolchain@stable
 
-    - name: Get release version
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
-    - name: Create Release
-      env:
-        GH_TOKEN: ${{ secrets.TOKEN }}
+    - name: Setup Git
       run: |
-        current_changelog="$(
-          awk "/## ${RELEASE_VERSION}/{flag=1; next} /## /{flag=0} flag" \
-            CHANGELOG.md
-        )"
-        gh release create $RELEASE_VERSION \
-          --title "Release $RELEASE_VERSION"\
-          --notes "$current_changelog" || true
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git switch -c 'release-v${{ inputs.version }}'
 
-    - name: Publish to crates.io
-      env:
-        CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO_TOKEN }}
-      run: |
-        cargo publish
+    # - name: Get release version
+    #   run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+    # - name: Tag commit
+    #   run: |
+    #     git tag "$RELEASE_VERSION" -m "Release $RELEASE_VERSION"
+    #     git push origin tag "$RELEASE_VERSION"
+
+    # - name: Publish to crates.io
+    #   env:
+    #     CARGO_REGISTRY_TOKEN: ${{ secrets.CRATESIO_TOKEN }}
+    #   run: |
+    #     cargo publish --workspace
+
+    # - name: Create Release
+    #   env:
+    #     GH_TOKEN: ${{ secrets.TOKEN }}
+    #   run: |
+    #     current_changelog="$(
+    #       awk "/## ${RELEASE_VERSION}/{flag=1; next} /## /{flag=0} flag" \
+    #         CHANGELOG.md
+    #     )"
+    #     gh release create $RELEASE_VERSION \
+    #       --title "Release $RELEASE_VERSION"\
+    #       --notes "$current_changelog" || true
